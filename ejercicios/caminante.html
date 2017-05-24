@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<script type="text/javascript" src="../p5/p5.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		
+		var Caminante = function(){
+
+			this.x  = width/2;
+			this.y  = height/2;
+
+			this.dibujar = function(){
+				stroke(0);
+				point(this.x, this.y);
+			}
+
+			this.mover = function(){
+				var aleatorioX = random(-3, 3);
+				var aleatorioY = random(-3, 3);
+
+				this.x += aleatorioX;
+				this.y += aleatorioY;
+			}
+		}
+
+		var caminante;
+
+		function setup(){
+			createCanvas(640, 360);
+			background(200);
+
+			caminante = new Caminante();
+			
+		}
+
+		function draw(){
+			caminante.mover();
+			caminante.dibujar();
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<script type="text/javascript" src="../p5/p5.js"></script>
+
+	<style type="text/css">
+		*{
+			margin: 0 0 0 0;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+
+	<script type="text/javascript">
+
+		var Particula = function(x, y){
+
+			this.pos = createVector(x, y);
+			this.vel = p5.Vector.random2D();
+			this.acc = createVector();
+
+			this.actualizar = function(){
+				this.pos.add(this.vel);
+				this.vel.add(this.acc);
+				
+
+			}
+
+			this.mostrar = function(){
+				stroke(255);
+				strokeWeight(4);
+
+				point(this.pos.x, this.pos.y);
+			}
+
+			this.atraccion = function(atractor){
+				var dir = p5.Vector.sub(atractor, this.pos);
+				var mag = dir.magSq();
+				mag = constrain(mag, 25, 500);
+				var G = 5;
+				var fuerza = G / mag;
+				dir.setMag(fuerza);
+				this.acc = dir;
+			}
+		}
+
+		var atractor;
+		var particula;
+
+		function setup(){
+			createCanvas(windowWidth, windowHeight);
+
+			atractor = createVector(width/2, height/2);
+
+			particula = new Particula(200, 100);
+		}
+
+		function draw(){
+
+			background(0);	
+
+			stroke(255);
+			strokeWeight(4);
+
+			point(atractor.x, atractor.y);
+
+			particula.atraccion(atractor);
+			particula.actualizar();
+			particula.mostrar();
+		}
+
+	</script>
+</body>
+</html>

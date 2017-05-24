@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<script type="text/javascript" src="../p5/p5.js"></script>
+
+	<style type="text/css">
+		*{
+			margin: 0 0 0 0;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		
+		var x = 0.01;
+		var y = 0;
+		var z = 0;
+
+		var a = 10;
+		var b = 28;
+		var c = 8/3;
+
+		var puntos = [];
+
+		
+
+		function setup(){
+			createCanvas(windowWidth, windowHeight, WEBGL);
+			
+		}
+
+		function draw(){
+
+			background(0);
+			orbitControl();
+			scale(5);
+			
+			ambientLight("#5E0101");
+
+			
+			dt = 0.01;
+
+			dx = (a*(y-x))*dt;
+			dy = (x*(b-z)-y)*dt;
+			dz = (x*y - c*z)*dt;
+
+			x += dx;
+			y += dy;
+			z += dz;
+			
+			puntos.push(createVector(x, y, z));
+				
+
+			rotateX(frameCount* -0.002);
+			rotateZ(frameCount* 0.002);
+
+			for(i in puntos){
+				push();
+
+				translate(puntos[i].x, puntos[i].y, puntos[i].z);
+
+				pointLight(201, 22, 22);
+
+				ambientMaterial(200);
+
+				sphere(1.5); 
+
+				pop();
+			}
+			
+
+			/*
+				translate(windowWidth/2,windowHeight/2);
+				puntos.push(createVector(x, y, z));
+
+				scale(4);
+
+				
+				rotate(radians(frameCount * 0.1));
+
+				noFill();
+
+				var h = 0;
+
+				beginShape();
+					for(i in puntos){
+						
+						stroke(h, 255, 255);
+						
+						vertex(puntos[i].x, puntos[i].y);
+
+						h += 0.1;
+
+						if(h > 255){
+							h = 0;
+						}
+					}
+				endShape();
+
+			*/
+		}
+	</script>
+</body>
+</html>

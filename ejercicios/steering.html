@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta charset="UTF-8" />
+
+	<script type="text/javascript" src="../p5/p5.js"></script>
+	<script type="text/javascript" src="../p5/addons/p5.dom.js"></script>
+
+	<style type="text/css">
+
+		*{
+			margin: 0 0 0 0;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+
+	<script type="text/javascript">
+
+		var Point = function(x, y){
+
+			this.pos = createVector(random(-width, width), random(-height, height));
+			this.target = createVector(x,y);
+
+			this.vel = p5.Vector.random2D();
+			this.acc = createVector();
+
+			this.maxSpeed = 5.5;
+			this.maxForce = 0.3;
+			
+			this.applyForce = function(f){
+				this.acc.add(f);
+			}	
+
+			this.arrive = function(target){
+				
+				var desired = p5.Vector.sub(target, this.pos);
+				var d = desired.mag();
+
+				var speed = this.maxSpeed;
+
+				if(d < 50){
+					speed = map(d, 0, 50, 0, this.maxSpeed);
+				}
+
+				desired.setMag(speed);
+
+				var steer = p5.Vector.sub(desired, this.vel);
+				//steer.limit(this.maxForce);
+				return steer;
+			}
+
+			this.seek = function(target){
+				
+				var desired = p5.Vector.sub(target, this.pos);
+				
+				desired.setMag(this.maxSpeed);
+
+				var steer = p5.Vector.sub(desired, this.vel);
+				steer.limit(this.maxForce);
+				return steer;
+			}
+
+			this.behaviors = function(){
+				var arrive = this.arrive(this.target);
+				this.applyForce(arrive);
+			}
+
+			this.update = function(){
+				this.pos.add(this.vel);
+				this.vel.add(this.acc);	
+				this.acc.mult(0);
+			}
+
+			this.show = function(){
+				stroke(255);
+				strokeWeight(2);
+				point(this.pos.x, this.pos.y);
+				//line(this.pos.x, this.pos.y, this.target.x, this.target.y);
+			}
+		}
+
+
+		var font;
+		var fontSize = 170;
+		var points = []
+		var s = 0.001;
+		var ts = false;
+
+		function preload(){
+			font  = loadFont('../resources/fonts/dosis/Dosis-Regular.otf');
+		}
+
+
+		function setup(){
+			
+			createCanvas(windowWidth, windowHeight);
+
+			var textPoints = font.textToPoints('Srcode', -font._textWidth('Srcode', fontSize)/2, 0, fontSize);
+
+			for(var i = 0; i < textPoints.length; i++){
+				var pt = textPoints[i];
+				var point = new Point(pt.x, pt.y);
+				points.push(point);
+			}
+		}
+
+		
+
+		function draw(){
+			background(0);
+			translate(width/2 , height/2);
+			
+			scale(s);
+
+			for(var i = 0 ; i < points.length; i++){
+				var p = points[i];
+
+				p.behaviors();
+				p.update();
+				p.show();
+			}
+
+			if(s < 1 && !ts){
+				s += 0.008;
+			}else{
+				ts = true;
+			}
+
+		}
+
+		function windowResized() {
+		  resizeCanvas(windowWidth, windowHeight);
+		}
+	</script>
+</body>
+</html>
